@@ -76,7 +76,7 @@ export const Todolist = ({
                         }
 
                         return (
-                            <li key={t.id}>
+                            <li key={t.id} className={t.isDone ? 'is-done' : ''}>
                                 <input type="checkbox" checked={t.isDone} onChange={changeTaskStatusHandler}/>
                                 <span>{t.title}</span>
                                 <Button title="X" onClick={removeTaskHandler}/>
