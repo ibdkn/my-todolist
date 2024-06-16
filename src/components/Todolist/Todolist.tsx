@@ -1,9 +1,12 @@
 import {FilterValueType, TaskType} from "../../App";
-import {Button} from "../Button/Button";
-import {Input} from "../Input/Input";
-import {ChangeEvent, KeyboardEvent, useState} from "react";
+import {ChangeEvent} from "react";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
+import {Box, Checkbox, IconButton, List, ListItem} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete'
+import {Button} from '@mui/material'
+import {filterButtonsContainerSx, getListItemSx} from "./Todolist.styles";
+import Grid from "@mui/material/Grid";
 
 type TodolistPropsType = {
     todolistID: string
@@ -56,7 +59,9 @@ export const Todolist = ({
                 <h3>
                     <EditableSpan value={title} onChange={updateTodolostTitleHandler}/>
                 </h3>
-                <Button title="X" onClick={removeTodolistHandler}/>
+                <IconButton onClick={removeTodolistHandler}>
+                    <DeleteIcon/>
+                </IconButton>
             </div>
             <div>
                 <AddItemForm addItem={addTaskCallback}/>
@@ -64,7 +69,7 @@ export const Todolist = ({
             {tasks.length === 0 ? (
                 <p>There are no tasks</p>
             ) : (
-                <ul>
+                <List>
                     {tasks.map(t => {
                         const removeTaskHandler = () => {
                             removeTask(todolistID, t.id);
@@ -79,32 +84,56 @@ export const Todolist = ({
                         }
 
                         return (
-                            <li key={t.id} className={t.isDone ? 'is-done' : ''}>
-                                <input type="checkbox" checked={t.isDone} onChange={changeTaskStatusHandler}/>
-                                <EditableSpan value={t.title} onChange={updateTaskTitleHandler}/>
-                                <Button title="X" onClick={removeTaskHandler}/>
-                            </li>
+                            <ListItem
+                                key={t.id}
+                                className={t.isDone ? 'is-done' : ''}
+                                sx={getListItemSx(t.isDone)}>
+                                <div>
+                                    <Checkbox checked={t.isDone} onChange={changeTaskStatusHandler}/>
+                                    <EditableSpan value={t.title} onChange={updateTaskTitleHandler}/>
+                                </div>
+                                <IconButton onClick={removeTaskHandler}>
+                                    <DeleteIcon/>
+                                </IconButton>
+                            </ListItem>
                         )
                     })}
-                </ul>
+                </List>
             )}
-            <div>
-                <Button
-                    title="All"
-                    className={filter === 'all' ? 'active-filter' : ''}
-                    onClick={() => changeFilterHandler('all')}
-                />
-                <Button
-                    title="Active"
-                    className={filter === 'active' ? 'active-filter' : ''}
-                    onClick={() => changeFilterHandler('active')}
-                />
-                <Button
-                    title="Completed"
-                    className={filter === 'completed' ? 'active-filter' : ''}
-                    onClick={() => changeFilterHandler('completed')}
-                />
-            </div>
+            <Box sx={filterButtonsContainerSx}>{/*...*/}</Box>
+            <Grid container spacing={1}>
+                <Grid item>
+                    <Button
+                        size="small"
+                        variant="contained"
+                        // variant={filter === 'all' ? 'contained' : 'contained'}
+                        color={filter === 'all' ? 'primary' : 'inherit'}
+                        onClick={() => changeFilterHandler('all')}
+                    >
+                        All
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button
+                        size="small"
+                        variant="contained"
+                        color={filter === 'active' ? 'primary' : 'inherit'}
+                        onClick={() => changeFilterHandler('active')}
+                    >
+                        Active
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button
+                        size="small"
+                        variant="contained"
+                        color={filter === 'completed' ? 'primary' : 'inherit'}
+                        onClick={() => changeFilterHandler('completed')}
+                    >
+                        Completed
+                    </Button>
+                </Grid>
+            </Grid>
         </div>
     );
 };

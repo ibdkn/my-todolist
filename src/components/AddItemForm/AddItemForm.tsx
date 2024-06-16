@@ -1,24 +1,24 @@
-import {Input} from "../Input/Input";
-import {Button} from "../Button/Button";
 import {ChangeEvent, KeyboardEvent, useState} from "react";
+import {IconButton, TextField} from "@mui/material";
+import AddBoxIcon from '@mui/icons-material/AddBox'
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
 };
 export const AddItemForm = ({addItem}: AddItemFormPropsType) => {
-    const [itemTitle, setItemTitle] = useState<string>('');
+    const [title, setTitle] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
 
     const addItemHandler = () => {
-        if(itemTitle.trim() !== '') {
-            addItem(itemTitle.trim());
-            setItemTitle('');
+        if(title.trim() !== '') {
+            addItem(title.trim());
+            setTitle('');
         } else {
             setError('Title is required');
         }
     }
-    const changeTaskTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setItemTitle(e.currentTarget.value);
+    const changeItemTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.currentTarget.value);
     }
 
     const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -30,13 +30,20 @@ export const AddItemForm = ({addItem}: AddItemFormPropsType) => {
 
     return (
         <div>
-            <Input
+            <TextField
+                label='Enter a title'
+                variant='outlined'
                 className={error ? 'error' : ''}
-                value={itemTitle}
-                onChange={changeTaskTitleHandler}
-                onKeyUp={onKeyUpHandler}/>
-            <Button title="+" onClick={addItemHandler}/>
-            {error && <p className="error-message">{error}</p>}
+                value={title}
+                size={'small'}
+                error={!!error}
+                helperText={error}
+                onChange={changeItemTitleHandler}
+                onKeyUp={onKeyUpHandler}
+            />
+            <IconButton onClick={addItemHandler} color={'primary'}>
+                <AddBoxIcon />
+            </IconButton>
         </div>
     );
 };
