@@ -4,6 +4,11 @@
   gap: 50px;
 }
 
+.todolist-title-container {
+  display: flex;
+  align-items: center;
+}
+
 .error {
   border: red 1px solid;
 }

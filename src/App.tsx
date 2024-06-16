@@ -28,7 +28,7 @@ function App() {
     const [todolists, setTodolists] = useState<TodolistType[]>([
         {id: todolistID1, title: 'What to learn', filter: 'all'},
         {id: todolistID2, title: 'What to buy', filter: 'all'},
-    ])
+    ]);
 
     const [tasks, setTasks] = useState<TasksState>({
         [todolistID1]: [
@@ -40,25 +40,29 @@ function App() {
             { id: v1(), title: 'Rest API', isDone: true },
             { id: v1(), title: 'GraphQL', isDone: false },
         ],
-    })
+    });
 
-    const removeTask = (taskId: string) => {
-        // const taskCopy = [...tasks];
-        // setTasks(taskCopy.filter(t => t.id !== taskId));
-    }
-
-    const addTask = (title: string) => {
-        // const newTask = {id: v1(), title, isDone: false};
-        // setTasks([newTask, ...tasks]);
-    }
-
-    const changeTaskFilter = (todolistID: string, filter: FilterValueType) => {
+    const changeFilter = (todolistID: string, filter: FilterValueType) => {
         setTodolists(todolists.map(tl => tl.id === todolistID ? {...tl, filter} : tl));
     }
 
-    const changeTaskStatus = (taskId: string, isDone: boolean) => {
-        // const taskCopy = tasks;
-        // setTasks(taskCopy.map(t => t.id === taskId ? {...t, isDone} : t));
+    const removeTodolist = (todolistID: string) => {
+        setTodolists(todolists.filter(tl => tl.id !== todolistID));
+        delete tasks[todolistID];
+        setTasks({...tasks});
+    }
+
+    const removeTask = (todolistID: string, taskId: string) => {
+        setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== taskId)});
+    }
+
+    const addTask = (todolistID: string, title: string) => {
+        const newTask = {id: v1(), title, isDone: false};
+        setTasks({...tasks, [todolistID]: [newTask, ...tasks[todolistID]]});
+    }
+
+    const changeTaskStatus = (todolistID: string, taskId: string, isDone: boolean) => {
+        setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, isDone} : t)})
     }
 
     return (
@@ -85,7 +89,8 @@ function App() {
                               removeTask={removeTask}
                               addTask={addTask}
                               changeTaskStatus={changeTaskStatus}
-                              changeTaskFilter={changeTaskFilter}
+                              removeTodolist={removeTodolist}
+                              changeFilter={changeFilter}
                     />
                 )
             })}
