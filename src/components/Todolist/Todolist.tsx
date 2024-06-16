@@ -2,6 +2,7 @@ import {FilterValueType, TaskType} from "../../App";
 import {Button} from "../Button/Button";
 import {Input} from "../Input/Input";
 import {ChangeEvent, KeyboardEvent, useState} from "react";
+import {AddItemForm} from "../AddItemForm/AddItemForm";
 
 type TodolistPropsType = {
     todolistID: string
@@ -28,35 +29,18 @@ export const Todolist = ({
                              changeFilter
                          }: TodolistPropsType) => {
 
-    const [taskTitle, setTaskTitle] = useState<string>('');
-    const [error, setError] = useState<string | null>(null);
 
     const changeFilterHandler = (filter: FilterValueType) => {
         changeFilter(todolistID, filter);
     }
 
-    const addTaskHandler = () => {
-        if(taskTitle.trim() !== '') {
-            addTask(todolistID, taskTitle.trim());
-            setTaskTitle('');
-        } else {
-            setError('Title is required');
-        }
-    }
-
-    const changeTaskTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setTaskTitle(e.currentTarget.value);
-    }
-
-    const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(null);
-        if(e.key === 'Enter') {
-            addTaskHandler();
-        }
-    }
 
     const removeTodolistHandler = () => {
         removeTodolist(todolistID)
+    }
+
+    const addTaskCallback = (title: string) => {
+        addTask(todolistID, title);
     }
 
     return (
@@ -66,13 +50,7 @@ export const Todolist = ({
                 <Button title="X" onClick={removeTodolistHandler}/>
             </div>
             <div>
-                <Input
-                    className={error ? 'error' : ''}
-                    value={taskTitle}
-                    onChange={changeTaskTitleHandler}
-                    onKeyUp={onKeyUpHandler}/>
-                <Button title="+" onClick={addTaskHandler}/>
-                {error && <p className="error-message">{error}</p>}
+                <AddItemForm addItem={addTaskCallback}/>
             </div>
             {tasks.length === 0 ? (
                 <p>There are no tasks</p>
