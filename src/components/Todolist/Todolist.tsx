@@ -22,14 +22,19 @@ export const Todolist = ({
                          }: TodolistPropsType) => {
 
     const [taskTitle, setTaskTitle] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
 
     const changeTaskFilterHandler = (filter: FilterValueType) => {
         changeTaskFilter(filter);
     }
 
     const addTaskHandler = () => {
-        addTask(taskTitle);
-        setTaskTitle('');
+        if(taskTitle.trim() !== '') {
+            addTask(taskTitle.trim());
+            setTaskTitle('');
+        } else {
+            setError('Title is required');
+        }
     }
 
     const changeTaskTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -37,9 +42,9 @@ export const Todolist = ({
     }
 
     const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        setError(null);
         if(e.key === 'Enter') {
-            addTask(taskTitle);
-            setTaskTitle('');
+            addTaskHandler();
         }
     }
 
@@ -47,8 +52,13 @@ export const Todolist = ({
         <div>
             <h3>{title}</h3>
             <div>
-                <Input value={taskTitle} onChange={changeTaskTitleHandler} onKeyUp={onKeyUpHandler}/>
+                <Input
+                    className={error ? 'error' : ''}
+                    value={taskTitle}
+                    onChange={changeTaskTitleHandler}
+                    onKeyUp={onKeyUpHandler}/>
                 <Button title="+" callback={addTaskHandler}/>
+                {error && <p className="error-message">{error}</p>}
             </div>
             {tasks.length === 0 ? (
                 <p>There are no tasks</p>
