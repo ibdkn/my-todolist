@@ -41,12 +41,18 @@ function App() {
         setFilter(filter)
     }
 
+    const changeTaskStatus = (taskId: string, isDone: boolean) => {
+        const taskCopy = tasks;
+        setTasks(taskCopy.map(t => t.id === taskId ? {...t, isDone} : t));
+    }
+
     return (
         <div className="App">
             <Todolist title="What to learn"
                       tasks={filteredTasks}
                       removeTask={removeTask}
                       addTask={addTask}
+                      changeTaskStatus={changeTaskStatus}
                       changeTaskFilter={changeTaskFilter}
             />
         </div>

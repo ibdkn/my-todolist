@@ -9,6 +9,7 @@ type TodolistPropsType = {
 
     removeTask: (taskId: string) => void
     addTask: (title: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean) => void
     changeTaskFilter: (filter: FilterValueType) => void
 };
 export const Todolist = ({
@@ -16,6 +17,7 @@ export const Todolist = ({
                              tasks,
                              removeTask,
                              addTask,
+                             changeTaskStatus,
                              changeTaskFilter
                          }: TodolistPropsType) => {
 
@@ -57,9 +59,13 @@ export const Todolist = ({
                             removeTask(t.id);
                         }
 
+                        const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
+                            changeTaskStatus(t.id, e.currentTarget.checked);
+                        }
+
                         return (
                             <li key={t.id}>
-                                <input type="checkbox" checked={t.isDone}/>
+                                <input type="checkbox" checked={t.isDone} onChange={changeTaskStatusHandler}/>
                                 <span>{t.title}</span>
                                 <Button title="X" callback={removeTaskHandler}/>
                             </li>
