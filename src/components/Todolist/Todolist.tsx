@@ -16,11 +16,11 @@ type TodolistPropsType = {
 
     removeTask: (todolistID: string, taskId: string) => void
     addTask: (todolistID: string, title: string) => void
-    updateTaskTitle: (todolistID: string, taskID: string, title: string) => void
+    changeTaskTitle: (todolistID: string, taskID: string, title: string) => void
     changeTaskStatus: (todolistID: string, taskId: string, isDone: boolean) => void
     removeTodolist: (todolistID: string) => void
-    updateTodolistTitle: (todolistID: string, title: string) => void
-    changeFilter: (todolistID: string, filter: FilterValueType) => void
+    changeTodolistTitle: (todolistID: string, title: string) => void
+    changeTodolistFilter: (todolistID: string, filter: FilterValueType) => void
 };
 
 export const Todolist = ({
@@ -30,19 +30,19 @@ export const Todolist = ({
                              filter,
                              removeTask,
                              addTask,
-                             updateTaskTitle,
+                             changeTaskTitle,
                              changeTaskStatus,
                              removeTodolist,
-                             updateTodolistTitle,
-                             changeFilter
+                             changeTodolistTitle,
+                             changeTodolistFilter
                          }: TodolistPropsType) => {
 
     const updateTodolostTitleHandler = (title: string) => {
-        updateTodolistTitle(todolistID, title);
+        changeTodolistTitle(todolistID, title);
     }
 
-    const changeFilterHandler = (filter: FilterValueType) => {
-        changeFilter(todolistID, filter);
+    const changeTodolistFilterHandler = (filter: FilterValueType) => {
+        changeTodolistFilter(todolistID, filter);
     }
 
     const removeTodolistHandler = () => {
@@ -79,8 +79,8 @@ export const Todolist = ({
                             changeTaskStatus(todolistID, t.id, e.currentTarget.checked);
                         }
 
-                        const updateTaskTitleHandler = (title: string) => {
-                            updateTaskTitle(todolistID, t.id, title);
+                        const changeTaskTitleHandler = (title: string) => {
+                            changeTaskTitle(todolistID, t.id, title);
                         }
 
                         return (
@@ -90,7 +90,7 @@ export const Todolist = ({
                                 sx={getListItemSx(t.isDone)}>
                                 <div>
                                     <Checkbox checked={t.isDone} onChange={changeTaskStatusHandler}/>
-                                    <EditableSpan value={t.title} onChange={updateTaskTitleHandler}/>
+                                    <EditableSpan value={t.title} onChange={changeTaskTitleHandler}/>
                                 </div>
                                 <IconButton onClick={removeTaskHandler}>
                                     <DeleteIcon/>
@@ -108,7 +108,7 @@ export const Todolist = ({
                         variant="contained"
                         // variant={filter === 'all' ? 'contained' : 'contained'}
                         color={filter === 'all' ? 'primary' : 'inherit'}
-                        onClick={() => changeFilterHandler('all')}
+                        onClick={() => changeTodolistFilterHandler('all')}
                     >
                         All
                     </Button>
@@ -118,7 +118,7 @@ export const Todolist = ({
                         size="small"
                         variant="contained"
                         color={filter === 'active' ? 'primary' : 'inherit'}
-                        onClick={() => changeFilterHandler('active')}
+                        onClick={() => changeTodolistFilterHandler('active')}
                     >
                         Active
                     </Button>
@@ -128,7 +128,7 @@ export const Todolist = ({
                         size="small"
                         variant="contained"
                         color={filter === 'completed' ? 'primary' : 'inherit'}
-                        onClick={() => changeFilterHandler('completed')}
+                        onClick={() => changeTodolistFilterHandler('completed')}
                     >
                         Completed
                     </Button>
