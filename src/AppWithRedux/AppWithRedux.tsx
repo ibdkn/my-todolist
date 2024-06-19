@@ -1,32 +1,16 @@
-import React, {useCallback, useReducer, useState} from 'react';
+import React, {useState} from 'react';
 import '../App.css';
 import {Todolist} from "../components/Todolist/Todolist";
-import {v1} from "uuid";
 import {AddItemForm} from "../components/AddItemForm/AddItemForm";
 import Grid from '@mui/material/Grid';
 import {AppBar, CssBaseline, IconButton, Switch, Toolbar} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper'
-import {MenuButton} from "../components/MenuButton";
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import {
-    addTodolistAC,
-    changeTodolistFilterAC, changeTodolistTitleAC,
-    removeTodolistAC,
-    todolistsReducer
-} from "../model/todolists/todolists-reducer";
-import {
-    addTaskAC,
-    changeTaskStatusAC,
-    changeTaskTitleAC,
-    removeTaskAC,
-    tasksReducer
-} from "../model/tasks/tasks-reducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../store/store";
-import {useAppSelector} from "../hooks/hooks";
+import LoginIcon from '@mui/icons-material/Login';
 import {UseAppWithRedux} from "./hooks/useAppWithRedux";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 type ThemeMode = 'dark' | 'light'
 
@@ -49,20 +33,10 @@ export type TaskType = {
 export type FilterValueType = 'all' | 'active' | 'completed'
 
 function AppWithRedux() {
-    const [themeMode, setThemeMode] = useState<ThemeMode>('dark')
+    const [themeMode, setThemeMode] = useState<ThemeMode>('dark');
 
-    const {
-        todolists,
-        tasks,
-        removeTodolist,
-        addTodolist,
-        changeTodolistFilter,
-        changeTodolistTitle,
-        removeTask,
-        addTask,
-        changeTaskTitle,
-        changeTaskStatus
-    } = UseAppWithRedux();
+    const {todolists, tasks, removeTodolist, addTodolist, changeTodolistFilter,
+        changeTodolistTitle, removeTask, addTask, changeTaskTitle, changeTaskStatus} = UseAppWithRedux();
 
     const theme = createTheme({
         palette: {
@@ -86,8 +60,12 @@ function AppWithRedux() {
                         <MenuIcon />
                     </IconButton>
                     <div>
-                        <MenuButton>Login</MenuButton>
-                        <MenuButton>Logout</MenuButton>
+                        <IconButton>
+                            <LoginIcon/>
+                        </IconButton>
+                        {/*<IconButton>*/}
+                        {/*    <LogoutIcon/>*/}
+                        {/*</IconButton>*/}
                         <Switch color={'default'} onChange={changeModeHandler} />
                     </div>
                 </Toolbar>
