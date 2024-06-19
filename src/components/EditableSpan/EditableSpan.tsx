@@ -1,11 +1,13 @@
-import {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useState} from "react";
 import {TextField} from "@mui/material";
 
 type EditableSpanPropsType = {
     value: string
     onChange: (title: string) => void
 };
-export const EditableSpan = ({value, onChange}: EditableSpanPropsType) => {
+export const EditableSpan = React.memo(({value, onChange}: EditableSpanPropsType) => {
+    console.log('EditableSpan')
+
     const [editMode, setEditMode] = useState<boolean>(false);
     const [title, setTitle] = useState(value);
 
@@ -32,10 +34,10 @@ export const EditableSpan = ({value, onChange}: EditableSpanPropsType) => {
                     onBlur={deactivateEditModeHandler}
                     autoFocus
                 />
-                ) : (
-                    <span onClick={activateEditModeHandler}>{value}</span>
-                )
+            ) : (
+                <span onClick={activateEditModeHandler}>{value}</span>
+            )
             }
         </>
     );
-};
+});

@@ -1,5 +1,5 @@
 import {FilterValueType, TaskType} from "../../App";
-import {ChangeEvent} from "react";
+import React, {ChangeEvent, useCallback} from "react";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
 import {Box, Checkbox, IconButton, List, ListItem} from "@mui/material";
@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import {Button} from '@mui/material'
 import {filterButtonsContainerSx, getListItemSx} from "./Todolist.styles";
 import Grid from "@mui/material/Grid";
+import {Task} from "../Task/Task";
 
 type TodolistPropsType = {
     todolistID: string
@@ -23,7 +24,7 @@ type TodolistPropsType = {
     changeTodolistFilter: (todolistID: string, filter: FilterValueType) => void
 };
 
-export const Todolist = ({
+export const Todolist = React.memo(({
                              todolistID,
                              title,
                              tasks,
@@ -37,20 +38,29 @@ export const Todolist = ({
                              changeTodolistFilter
                          }: TodolistPropsType) => {
 
-    const updateTodolostTitleHandler = (title: string) => {
+    const updateTodolostTitleHandler = useCallback((title: string) => {
         changeTodolistTitle(todolistID, title);
-    }
+    }, [changeTodolistTitle, todolistID])
 
-    const changeTodolistFilterHandler = (filter: FilterValueType) => {
-        changeTodolistFilter(todolistID, filter);
-    }
+    const onAllClickHandler = useCallback(() => changeTodolistFilter(todolistID, 'all'), [changeTodolistFilter, todolistID])
+    const onActiveClickHandler = useCallback(() => changeTodolistFilter(todolistID, 'active'), [changeTodolistFilter, todolistID])
+    const onCompletedClickHandler = useCallback(() => changeTodolistFilter(todolistID, 'completed'), [changeTodolistFilter, todolistID])
 
     const removeTodolistHandler = () => {
         removeTodolist(todolistID)
     }
 
-    const addTaskCallback = (title: string) => {
+    const addTaskCallback = useCallback((title: string) => {
         addTask(todolistID, title);
+    }, [addTask, title])
+
+    let tasksForTodolist = tasks;
+
+    if (filter === 'active') {
+        tasksForTodolist = tasks.filter(t => !t.isDone);
+    }
+    if (filter === 'completed') {
+        tasksForTodolist = tasks.filter(t => t.isDone);
     }
 
     return (
@@ -70,32 +80,17 @@ export const Todolist = ({
                 <p>There are no tasks</p>
             ) : (
                 <List>
-                    {tasks.map(t => {
-                        const removeTaskHandler = () => {
-                            removeTask(todolistID, t.id);
-                        }
-
-                        const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                            changeTaskStatus(todolistID, t.id, e.currentTarget.checked);
-                        }
-
-                        const changeTaskTitleHandler = (title: string) => {
-                            changeTaskTitle(todolistID, t.id, title);
-                        }
-
+                    {tasksForTodolist.map(t => {
                         return (
-                            <ListItem
+                            <Task
                                 key={t.id}
-                                className={t.isDone ? 'is-done' : ''}
-                                sx={getListItemSx(t.isDone)}>
-                                <div>
-                                    <Checkbox checked={t.isDone} onChange={changeTaskStatusHandler}/>
-                                    <EditableSpan value={t.title} onChange={changeTaskTitleHandler}/>
-                                </div>
-                                <IconButton onClick={removeTaskHandler}>
-                                    <DeleteIcon/>
-                                </IconButton>
-                            </ListItem>
+                                todolistID={todolistID}
+                                taskID={t.id}
+                                task={t}
+                                removeTask={removeTask}
+                                changeTaskStatus={changeTaskStatus}
+                                changeTaskTitle={changeTaskTitle}
+                            />
                         )
                     })}
                 </List>
@@ -108,7 +103,7 @@ export const Todolist = ({
                         variant="contained"
                         // variant={filter === 'all' ? 'contained' : 'contained'}
                         color={filter === 'all' ? 'primary' : 'inherit'}
-                        onClick={() => changeTodolistFilterHandler('all')}
+                        onClick={() => onAllClickHandler}
                     >
                         All
                     </Button>
@@ -118,7 +113,7 @@ export const Todolist = ({
                         size="small"
                         variant="contained"
                         color={filter === 'active' ? 'primary' : 'inherit'}
-                        onClick={() => changeTodolistFilterHandler('active')}
+                        onClick={() => onActiveClickHandler}
                     >
                         Active
                     </Button>
@@ -128,7 +123,7 @@ export const Todolist = ({
                         size="small"
                         variant="contained"
                         color={filter === 'completed' ? 'primary' : 'inherit'}
-                        onClick={() => changeTodolistFilterHandler('completed')}
+                        onClick={() => onCompletedClickHandler}
                     >
                         Completed
                     </Button>
@@ -136,4 +131,4 @@ export const Todolist = ({
             </Grid>
         </div>
     );
-};
+});
