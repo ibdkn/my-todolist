@@ -1,4 +1,4 @@
-import {FilterValueType, TaskType} from "../../App";
+import {FilterValueType, TaskType} from "../../App/App";
 import React, {ChangeEvent, useCallback} from "react";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableSpan} from "../EditableSpan/EditableSpan";

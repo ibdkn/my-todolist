@@ -5,7 +5,7 @@ import {Checkbox, IconButton, ListItem} from "@mui/material";
 import {getListItemSx} from "../Todolist/Todolist.styles";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {TaskType} from "../../AppWithRedux";
+import {TaskType} from "../../AppWithRedux/AppWithRedux";
 
 type TaskPropsType = {
     taskID: string

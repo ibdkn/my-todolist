@@ -1,34 +1,19 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {IconButton, TextField} from "@mui/material";
 import AddBoxIcon from '@mui/icons-material/AddBox'
+import {UseAddItemForm} from "./hooks/useAddItemForm";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
 };
 export const AddItemForm = React.memo(({addItem}: AddItemFormPropsType) => {
-    const [title, setTitle] = useState<string>('');
-    const [error, setError] = useState<string | null>(null);
-
-    const addItemHandler = () => {
-        if (title.trim() !== '') {
-            addItem(title.trim());
-            setTitle('');
-        } else {
-            setError('Title is required');
-        }
-    }
-    const changeItemTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.currentTarget.value);
-    }
-
-    const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (error !== null) {
-            setError(null);
-        }
-        if (e.key === 'Enter') {
-            addItemHandler();
-        }
-    }
+    const {
+        title,
+        error,
+        changeItemTitleHandler,
+        onKeyUpHandler,
+        addItemHandler
+    } = UseAddItemForm(addItem)
 
     return (
         <div>

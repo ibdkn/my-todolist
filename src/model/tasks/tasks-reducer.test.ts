@@ -1,4 +1,4 @@
-import {TasksStateType} from "../../App";
+import {TasksStateType} from "../../App/App";
 import {addTaskAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./tasks-reducer";
 
 
